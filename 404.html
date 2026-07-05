@@ -6,16 +6,16 @@
     <script>
       // GitHub Pages SPA routing fix
       // When visiting /owen or any route directly, GitHub Pages returns 404
-      // This script redirects to index.html with the path preserved as a query param
-      const path = window.location.pathname
-        .replace(new RegExp('^' + process.env.PUBLIC_URL || ''), '') // Remove base URL
-        .replace(/^\//, '') // Remove leading slash
-        .split('?')[0]; // Remove query params
+      // This script redirects to index.html with the path preserved
+      const basePath = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
+      const pathWithoutBase = window.location.pathname.substring(basePath.length);
+      const cleanPath = pathWithoutBase.split('?')[0] || '/';
       
-      if (path) {
-        window.location.replace('/?redirect=' + encodeURIComponent('/' + path));
+      if (cleanPath !== '/' && cleanPath !== '') {
+        // Redirect to home with the path preserved as a hash
+        window.location.replace(basePath + '?pathname=' + encodeURIComponent(cleanPath));
       } else {
-        window.location.replace('/');
+        window.location.replace(basePath);
       }
     </script>
   </head>
